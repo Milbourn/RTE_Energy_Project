@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: generation
+    database: RTE_ENERGY
+    schema: GENERATION
+    tables:
+      - name: ACTUAL_GENERATION
+      - name: CONSUMPTION
+      - name: PHYSICAL_FLOWS
+      - name: WHOLESALE_PRICES
