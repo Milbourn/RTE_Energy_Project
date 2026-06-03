@@ -4,7 +4,7 @@ with flows as (
 
 daily as (
     select
-        date_trunc('day', period_start)     as date_day,
+        date_trunc('day', period_start)::date     as date_day,
         sender_country,
         receiver_country,
         sum(value_mw)                       as total_mw,
