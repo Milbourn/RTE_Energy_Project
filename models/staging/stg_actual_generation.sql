@@ -12,7 +12,8 @@ renamed as (
         end_date                                as period_end,
         value_mw,
         convert_timezone('UTC', start_date)     as period_start_utc,
-        inserted_at
+        loaded_at                           as inserted_at,
+
 
     from source
 
