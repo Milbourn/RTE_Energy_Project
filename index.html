@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mapping France's Electricity Mix — Neil Milbourn</title>
+<title>Mapping France's Electricity Mix Neil Milbourn</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
@@ -127,7 +127,7 @@
     letter-spacing: -1px;
     margin-bottom: 8px;
   }
-  .hero h1 em { font-style: italic; color: var(--sage-light); }
+  .hero h1 em { font-style: normal; color: #fff; }
   .hero-sub {
     font-size: 15px;
     color: #8fa880;
@@ -586,15 +586,115 @@
     .stat-row { grid-template-columns: repeat(2, 1fr); }
   }
 
-  /* ── FADE IN ── */
+  /* ── WHAT I LEARNED ── */
+  .learned-section {
+    background: var(--sage-bg);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 64px 32px;
+  }
+  .learned-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .learned-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .learned-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 36px;
+  }
+  .learned-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 860px;
+  }
+  @media (max-width: 640px) {
+    .learned-grid { grid-template-columns: 1fr; }
+  }
+  .learned-item {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px 22px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .learned-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .learned-heading {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 7px;
+  }
+  .learned-text {
+    font-size: 13px;
+    color: #4a5a25;
+    line-height: 1.7;
+  }
+
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: none; }
   }
-  .hero-inner > * { animation: fadeUp 0.55s ease both; }
-  .hero-inner > *:nth-child(2) { animation-delay: 0.08s; }
-  .hero-inner > *:nth-child(3) { animation-delay: 0.16s; }
-  .hero-inner > *:nth-child(4) { animation-delay: 0.24s; }
+
+  /* ── TITLE SWEEP ── */
+  @keyframes sweepIn {
+    from { opacity: 0; transform: translateX(60px); clip-path: inset(0 100% 0 0); }
+    to   { opacity: 1; transform: translateX(0);    clip-path: inset(0 0% 0 0); }
+  }
+  .hero h1 {
+    animation: sweepIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.2s;
+  }
+  .hero-eyebrow {
+    animation: fadeUp 0.5s ease both;
+    animation-delay: 0.05s;
+  }
+  .hero-sub {
+    animation: fadeUp 0.5s ease both;
+    animation-delay: 0.55s;
+  }
+  .hero-meta {
+    animation: fadeUp 0.5s ease both;
+    animation-delay: 0.7s;
+  }
+
+  /* ── SECTION HEADERS plain, not numbered ── */
+  .section-header {
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-num { display: none; }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .section-title span {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 4px;
+  }
 </style>
 </head>
 <body>
@@ -618,8 +718,8 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
-    <div class="hero-eyebrow">Portfolio Project — Data Engineering</div>
-    <h1>France's<br><em>Electricity Grid</em></h1>
+    <div class="hero-eyebrow">Portfolio Project Data Engineering</div>
+    <h1>Mapping France's<br>Electricity Mix</h1>
     <p class="hero-sub">
       An end-to-end pipeline pulling live data from four RTE France APIs into Snowflake,
       transforming with dbt Cloud, and visualising in Power BI across 3 million rows from January 2022 to present.
@@ -688,11 +788,11 @@
 
   <!-- KEY STATS -->
   <div class="stat-row">
-    <div class="stat-card"><div class="stat-val">r = -0.62</div><div class="stat-label">Price vs renewables</div></div>
-    <div class="stat-card"><div class="stat-val">4</div><div class="stat-label">API endpoints</div></div>
-    <div class="stat-card"><div class="stat-val">1,392</div><div class="stat-label">Days covered</div></div>
-    <div class="stat-card"><div class="stat-val">7</div><div class="stat-label">dbt models</div></div>
-    <div class="stat-card"><div class="stat-val">3M+</div><div class="stat-label">Rows loaded</div></div>
+    <div class="stat-card"><div class="stat-val">3,000,000+</div><div class="stat-label">Rows of data loaded</div></div>
+    <div class="stat-card"><div class="stat-val" style="font-size:22px;line-height:1.2;">Jan 2022<br>to present</div><div class="stat-label">Live data range</div></div>
+    <div class="stat-card"><div class="stat-val">70.9%</div><div class="stat-label">Nuclear share</div></div>
+    <div class="stat-card"><div class="stat-val">93.7%</div><div class="stat-label">Low-carbon electricity</div></div>
+    <div class="stat-card"><div class="stat-val">6%</div><div class="stat-label">Import dependency</div></div>
   </div>
 
   <hr class="divider">
@@ -731,19 +831,19 @@
         <div class="built-list">
           <div class="built-item">
             <div class="built-icon">⚡</div>
-            <div class="built-text"><strong>Actual Generation</strong> — generation by production type (nuclear, gas, wind, solar, hydro, biomass) at 30-min intervals. 417K rows after backfill.</div>
+            <div class="built-text"><strong>Actual Generation</strong> generation by production type (nuclear, gas, wind, solar, hydro, biomass) at 30-min intervals. 417K rows after backfill.</div>
           </div>
           <div class="built-item">
             <div class="built-icon">📈</div>
-            <div class="built-text"><strong>Consumption</strong> — national electricity consumption with realised and forecast values. 464K rows. Used to calculate generation surplus and peak demand hour.</div>
+            <div class="built-text"><strong>Consumption</strong> national electricity consumption with realised and forecast values. 464K rows. Used to calculate generation surplus and peak demand hour.</div>
           </div>
           <div class="built-item">
             <div class="built-icon">🌍</div>
-            <div class="built-text"><strong>Physical Cross-Border Flows</strong> — import/export volumes with 8 neighbour countries: Spain, Germany, Belgium, Switzerland, Italy, Luxembourg, UK, Ireland. 1.44M rows.</div>
+            <div class="built-text"><strong>Physical Cross-Border Flows</strong> import/export volumes with 8 neighbour countries: Spain, Germany, Belgium, Switzerland, Italy, Luxembourg, UK, Ireland. 1.44M rows.</div>
           </div>
           <div class="built-item">
             <div class="built-icon">💶</div>
-            <div class="built-text"><strong>Wholesale Prices</strong> — day-ahead market clearing prices (€/MWh) via ENTSO-E transparency platform, joined to daily generation aggregates for merit-order analysis.</div>
+            <div class="built-text"><strong>Wholesale Prices</strong> day-ahead market clearing prices (€/MWh) via ENTSO-E transparency platform, joined to daily generation aggregates for merit-order analysis.</div>
           </div>
         </div>
       </div>
@@ -768,7 +868,7 @@
         <h3>Schema and table structure</h3>
         <p>
           Raw data lands in Snowflake in four staging tables, one per API source. The pipeline is designed
-          so it can safely run multiple times without duplicating data — if the daily scheduler fires twice,
+          so it can safely run multiple times without duplicating data if the daily scheduler fires twice,
           existing rows are updated rather than duplicated.
         </p>
         <div class="detail-pills">
@@ -784,9 +884,9 @@
       <div class="step-body">
         <h3>Tables in Snowflake</h3>
         <div class="screenshot-real">
-          <img src="snowflake-screenshot.png" alt="Snowflake — FCT_ENERGY_HOURLY table with generation columns">
+          <img src="snowflake-screenshot.png" alt="Snowflake FCT_ENERGY_HOURLY table with generation columns">
         </div>
-        <p class="screenshot-caption">FCT_ENERGY_HOURLY after dbt transformation — nuclear, gas, wind, solar, hydro columns alongside total generation and consumption</p>
+        <p class="screenshot-caption">FCT_ENERGY_HOURLY after dbt transformation nuclear, gas, wind, solar, hydro columns alongside total generation and consumption</p>
       </div>
     </div>
   </div>
@@ -808,18 +908,18 @@
       <div class="step-body">
         <h3>Model architecture</h3>
         <p>
-          Two layers. Staging models clean and standardise the raw tables — casting types, renaming columns,
+          Two layers. Staging models clean and standardise the raw tables casting types, renaming columns,
           filtering to realised values. Mart models pivot and aggregate to daily granularity, joining generation,
           consumption, and price into the three tables Power BI connects to directly.
         </p>
         <div class="built-list">
           <div class="built-item">
             <div class="built-icon">🔷</div>
-            <div class="built-text"><strong>Staging layer</strong> — <code>stg_actual_generation</code>, <code>stg_consumption</code>, <code>stg_physical_flows</code>, <code>stg_wholesale_prices</code></div>
+            <div class="built-text"><strong>Staging layer</strong> <code>stg_actual_generation</code>, <code>stg_consumption</code>, <code>stg_physical_flows</code>, <code>stg_wholesale_prices</code></div>
           </div>
           <div class="built-item">
             <div class="built-icon">🔶</div>
-            <div class="built-text"><strong>Mart layer</strong> — <code>fct_energy_hourly</code> (wide pivoted fact), <code>mart_generation_daily</code>, <code>mart_cross_border_flows</code>. Output schema: <code>DBT_NMILBOURN</code></div>
+            <div class="built-text"><strong>Mart layer</strong> <code>fct_energy_hourly</code> (wide pivoted fact), <code>mart_generation_daily</code>, <code>mart_cross_border_flows</code>. Output schema: <code>DBT_NMILBOURN</code></div>
           </div>
         </div>
       </div>
@@ -829,9 +929,9 @@
       <div class="step-body">
         <h3>Lineage graph</h3>
         <div class="screenshot-real">
-          <img src="dbt-screenshot.png" alt="dbt Cloud — fct_energy_hourly model and lineage DAG">
+          <img src="dbt-screenshot.png" alt="dbt Cloud fct_energy_hourly model and lineage DAG">
         </div>
-        <p class="screenshot-caption">dbt Cloud — lineage graph showing how raw source tables flow through staging models into the final mart layer that Power BI reads from</p>
+        <p class="screenshot-caption">dbt Cloud lineage graph showing how raw source tables flow through staging models into the final mart layer that Power BI reads from</p>
       </div>
     </div>
   </div>
@@ -854,15 +954,15 @@
         <h3>What the data shows</h3>
         <div class="finding">
           <div class="finding-q">When renewables surge, does the wholesale price actually fall?</div>
-          <div class="finding-a">Yes. Pearson <span class="r-val">r = -0.62</span> between daily renewables share and day-ahead price across 1,392 days. Each 10pp rise in renewable penetration displaces gas at the margin and pulls the clearing price down — the merit-order effect, visible in the data without any modelling assumptions.</div>
+          <div class="finding-a">Yes. Pearson <span class="r-val">r = -0.29</span> over the last 12 months between daily renewables share and day-ahead price. Each rise in renewable penetration displaces gas at the margin and pulls the clearing price down the merit-order effect, visible in the data without any modelling assumptions.</div>
         </div>
         <div class="finding green">
           <div class="finding-q">What is France's generation profile?</div>
-          <div class="finding-a">Average output of <strong>55.9 GW</strong>, with nuclear providing <strong>68%</strong>. France runs a structural surplus of around <strong>1.5 GW</strong> on average and is a consistent net exporter to neighbours including Germany, Belgium, and Italy.</div>
+          <div class="finding-a">Average output of <strong>55.9 GW</strong>, with nuclear providing <strong>68%</strong> and low-carbon sources (nuclear, renewables, hydro) accounting for <strong>93.7%</strong> of the mix. France runs a structural surplus and is a consistent net exporter, primarily to Italy, Belgium, and Germany.</div>
         </div>
         <div class="finding amber">
           <div class="finding-q">When is demand highest?</div>
-          <div class="finding-a">Peak consumption is at <strong>19:00</strong>, with a secondary morning peak around 09:00. Summer demand dips as heating load disappears, while winter evenings see the highest stress on the grid.</div>
+          <div class="finding-a">Unlike the UK, France peaks around <strong>midnight</strong> rather than the evening. Heavy reliance on electric heating means overnight load stays high through winter, with the annual average consumption hour peaking at 00:00 a counterintuitive finding driven by the heating-dominated demand profile.</div>
         </div>
       </div>
     </div>
@@ -871,35 +971,35 @@
       <div class="step-body">
         <h3>Overview tab</h3>
         <div class="kpi-grid">
-          <div class="kpi-card kc-blue">
-            <div class="kpi-label">Total Generation</div>
-            <div class="kpi-val">55.9 GW</div>
-            <div class="kpi-sub">Avg hourly output</div>
-            <div class="kpi-delta up">↗ +12.1% YoY</div>
-          </div>
-          <div class="kpi-card kc-green">
-            <div class="kpi-label">Net Cross-Border</div>
-            <div class="kpi-val">+0.9 GW</div>
-            <div class="kpi-sub">Avg net flow</div>
-            <div class="kpi-delta up">↗ Exporting</div>
-          </div>
           <div class="kpi-card kc-purple">
             <div class="kpi-label">Nuclear Share</div>
-            <div class="kpi-val">68.0%</div>
-            <div class="kpi-sub">Of total generation</div>
-            <div class="kpi-delta down">↘ -4.5pp YoY</div>
+            <div class="kpi-val">68%</div>
+            <div class="kpi-sub">Of all electricity generated</div>
+            <div class="kpi-delta down">↘ Slowly declining YoY</div>
           </div>
           <div class="kpi-card kc-amber">
-            <div class="kpi-label">Peak Demand Hour</div>
-            <div class="kpi-val">19:00</div>
-            <div class="kpi-sub">Avg highest consumption</div>
-            <div class="kpi-delta neutral">Evening peak</div>
+            <div class="kpi-label">Electricity Price</div>
+            <div class="kpi-val">€120/MWh</div>
+            <div class="kpi-sub">Day-ahead market average</div>
+            <div class="kpi-delta up">↗ +17.6% vs last month</div>
+          </div>
+          <div class="kpi-card kc-green">
+            <div class="kpi-label">Net Exporter</div>
+            <div class="kpi-val">+814 TWh</div>
+            <div class="kpi-sub">France sells more than it buys</div>
+            <div class="kpi-delta up">↗ Italy is the top buyer</div>
+          </div>
+          <div class="kpi-card kc-blue">
+            <div class="kpi-label">Low-Carbon Mix</div>
+            <div class="kpi-val">93.7%</div>
+            <div class="kpi-sub">Nuclear + renewables + hydro</div>
+            <div class="kpi-delta up">↗ +3.5pp renewables YoY</div>
           </div>
         </div>
         <div class="screenshot-real" style="margin-top:20px;">
-          <img src="powerbi-screenshot.png" alt="Power BI — Tab 1 Overview">
+          <img src="powerbi-screenshot.png" alt="Power BI Tab 1 Overview">
         </div>
-        <p class="screenshot-caption">Overview tab — KPI cards with sparklines, merit-order bar chart, seasonal scatter of price vs renewables share</p>
+        <p class="screenshot-caption">Overview tab KPI cards with sparklines, merit-order bar chart, seasonal scatter of price vs renewables share</p>
       </div>
     </div>
   </div>
@@ -955,12 +1055,42 @@
 
 </div>
 
+<!-- WHAT I LEARNED -->
+<div class="learned-section">
+  <div class="learned-inner">
+    <div class="learned-header">
+      <div class="learned-eyebrow">Reflections</div>
+      <div class="learned-title">What I learned</div>
+    </div>
+    <div class="learned-grid">
+      <div class="learned-item">
+        <div class="learned-icon">
+          <img src="https://www.getdbt.com/ui/img/logos/dbt-logo.svg" alt="dbt" style="width:24px;height:24px;object-fit:contain;" onerror="this.outerHTML='🔧'">
+        </div>
+        <div class="learned-body">
+          <div class="learned-heading">dbt changes how you think about SQL</div>
+          <div class="learned-text">I've written SQL transforms for years, but having them version-controlled, testable, and lineage-documented is a different experience entirely. The DAG view makes something that used to be invisible: how data flows through a system, suddenly obvious.</div>
+        </div>
+      </div>
+      <div class="learned-item">
+        <div class="learned-icon">
+          <img src="https://www.vectorlogo.zone/logos/snowflake/snowflake-icon.svg" alt="Snowflake" style="width:24px;height:24px;object-fit:contain;" onerror="this.outerHTML='❄️'">
+        </div>
+        <div class="learned-body">
+          <div class="learned-heading">Snowflake is a different class of fast</div>
+          <div class="learned-text">Coming from Azure SQL, querying three million rows with no indexes in under two seconds was genuinely surprising. The compute/storage separation stops being an abstract concept the first time you scale a warehouse up mid-query and watch the runtime drop.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- LIVE DASHBOARD -->
 <div class="live-section">
   <div class="live-inner">
     <div class="live-header">
       <div>
-        <div class="live-eyebrow">Interactive — Power BI App</div>
+        <div class="live-eyebrow">Interactive Power BI App</div>
         <div class="live-title">Live <em>Dashboard</em></div>
         <div class="live-desc">Updated daily from the RTE France API. Use the filters to explore generation mix, price dynamics, and cross-border flows across any date range from January 2022 to present.</div>
       </div>
@@ -986,7 +1116,7 @@
 <footer>
   <div class="footer-inner">
     <div>
-      Built by Neil Milbourn — BI Lead, Paris.
+      Built by Neil Milbourn BI Lead, Paris.
       <br>Power BI · Snowflake · dbt · Python
     </div>
     <div class="footer-links">
