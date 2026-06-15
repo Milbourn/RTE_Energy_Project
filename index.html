@@ -988,24 +988,24 @@
       <div class="step-num">2.2</div>
       <div class="step-body">
         <h3>Tables in Snowflake</h3>
-        <div class="carousel" id="pipeline-carousel">
+        <div class="carousel" id="carousel-snowflake" data-len="2">
           <div class="carousel-label">1 / 2</div>
-          <div class="carousel-track" id="pipeline-track">
+          <div class="carousel-track">
             <div class="carousel-slide">
-              <img src="snowflake-screenshot.png" alt="Snowflake FCT_ENERGY_HOURLY table with generation columns">
+              <img src="snowflake-screenshot1.png" alt="Snowflake table view 1">
             </div>
             <div class="carousel-slide">
-              <img src="dbt-screenshot.png" alt="dbt Cloud fct_energy_hourly model and lineage DAG">
+              <img src="snowflake-screenshot2.png" alt="Snowflake table view 2">
             </div>
           </div>
-          <div class="carousel-btn carousel-prev" onclick="carouselNav(-1)">&#8592;</div>
-          <div class="carousel-btn carousel-next" onclick="carouselNav(1)">&#8594;</div>
+          <div class="carousel-btn carousel-prev" onclick="carouselNav('carousel-snowflake',-1)">&#8592;</div>
+          <div class="carousel-btn carousel-next" onclick="carouselNav('carousel-snowflake',1)">&#8594;</div>
           <div class="carousel-dots">
-            <div class="carousel-dot active" onclick="carouselGo(0)"></div>
-            <div class="carousel-dot" onclick="carouselGo(1)"></div>
+            <div class="carousel-dot active" onclick="carouselGo('carousel-snowflake',0)"></div>
+            <div class="carousel-dot" onclick="carouselGo('carousel-snowflake',1)"></div>
           </div>
         </div>
-        <p class="screenshot-caption" id="pipeline-caption">FCT_ENERGY_HOURLY after dbt transformation nuclear, gas, wind, solar, hydro columns alongside total generation and consumption</p>
+        <p class="screenshot-caption">FCT_ENERGY_HOURLY after dbt transformation nuclear, gas, wind, solar, hydro columns alongside total generation and consumption</p>
       </div>
     </div>
   </div>
@@ -1047,9 +1047,24 @@
       <div class="step-num">3.2</div>
       <div class="step-body">
         <h3>Lineage graph</h3>
-        <p style="font-size:13px;color:var(--muted);">
-          See the lineage graph in the carousel above (Snowflake section) use the arrows or dots to switch to slide 2 of 2.
-        </p>
+        <div class="carousel" id="carousel-dbt" data-len="2">
+          <div class="carousel-label">1 / 2</div>
+          <div class="carousel-track">
+            <div class="carousel-slide">
+              <img src="dbt-screenshot1.png" alt="dbt Cloud view 1">
+            </div>
+            <div class="carousel-slide">
+              <img src="dbt-screenshot2.png" alt="dbt Cloud view 2">
+            </div>
+          </div>
+          <div class="carousel-btn carousel-prev" onclick="carouselNav('carousel-dbt',-1)">&#8592;</div>
+          <div class="carousel-btn carousel-next" onclick="carouselNav('carousel-dbt',1)">&#8594;</div>
+          <div class="carousel-dots">
+            <div class="carousel-dot active" onclick="carouselGo('carousel-dbt',0)"></div>
+            <div class="carousel-dot" onclick="carouselGo('carousel-dbt',1)"></div>
+          </div>
+        </div>
+        <p class="screenshot-caption">dbt Cloud lineage graph showing how raw source tables flow through staging models into the final mart layer that Power BI reads from</p>
       </div>
     </div>
   </div>
@@ -1114,8 +1129,22 @@
             <div class="kpi-delta up">↗ +3.5pp renewables YoY</div>
           </div>
         </div>
-        <div class="screenshot-real" style="margin-top:20px;">
-          <img src="powerbi-screenshot.png" alt="Power BI Tab 1 Overview">
+        <div class="carousel" id="carousel-powerbi" data-len="2" style="margin-top:20px;">
+          <div class="carousel-label">1 / 2</div>
+          <div class="carousel-track">
+            <div class="carousel-slide">
+              <img src="powerbi-screenshot1.png" alt="Power BI dashboard view 1">
+            </div>
+            <div class="carousel-slide">
+              <img src="powerbi-screenshot2.png" alt="Power BI dashboard view 2">
+            </div>
+          </div>
+          <div class="carousel-btn carousel-prev" onclick="carouselNav('carousel-powerbi',-1)">&#8592;</div>
+          <div class="carousel-btn carousel-next" onclick="carouselNav('carousel-powerbi',1)">&#8594;</div>
+          <div class="carousel-dots">
+            <div class="carousel-dot active" onclick="carouselGo('carousel-powerbi',0)"></div>
+            <div class="carousel-dot" onclick="carouselGo('carousel-powerbi',1)"></div>
+          </div>
         </div>
         <p class="screenshot-caption">Overview tab KPI cards with sparklines, merit-order bar chart, seasonal scatter of price vs renewables share</p>
       </div>
@@ -1245,26 +1274,27 @@
 </footer>
 
 <script>
-  const pipelineCaptions = [
-    'FCT_ENERGY_HOURLY after dbt transformation nuclear, gas, wind, solar, hydro columns alongside total generation and consumption',
-    'dbt Cloud lineage graph showing how raw source tables flow through staging models into the final mart layer that Power BI reads from'
-  ];
-  let pipelineIndex = 0;
+  const carouselState = {};
 
-  function carouselGo(i) {
-    pipelineIndex = i;
-    updatePipelineCarousel();
+  function carouselGo(id, i) {
+    carouselState[id] = i;
+    updateCarousel(id);
   }
-  function carouselNav(dir) {
-    pipelineIndex = (pipelineIndex + dir + pipelineCaptions.length) % pipelineCaptions.length;
-    updatePipelineCarousel();
+  function carouselNav(id, dir) {
+    const carousel = document.getElementById(id);
+    const len = parseInt(carousel.dataset.len, 10);
+    const current = carouselState[id] || 0;
+    carouselState[id] = (current + dir + len) % len;
+    updateCarousel(id);
   }
-  function updatePipelineCarousel() {
-    document.getElementById('pipeline-track').style.transform = `translateX(-${pipelineIndex * 100}%)`;
-    document.querySelector('#pipeline-carousel .carousel-label').textContent = `${pipelineIndex + 1} / ${pipelineCaptions.length}`;
-    document.getElementById('pipeline-caption').textContent = pipelineCaptions[pipelineIndex];
-    document.querySelectorAll('#pipeline-carousel .carousel-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === pipelineIndex);
+  function updateCarousel(id) {
+    const carousel = document.getElementById(id);
+    const len = parseInt(carousel.dataset.len, 10);
+    const index = carouselState[id] || 0;
+    carousel.querySelector('.carousel-track').style.transform = `translateX(-${index * 100}%)`;
+    carousel.querySelector('.carousel-label').textContent = `${index + 1} / ${len}`;
+    carousel.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === index);
     });
   }
 </script>
