@@ -142,6 +142,31 @@
     flex-wrap: wrap;
     gap: 8px;
   }
+
+  .hero-scroll {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: 40px;
+    color: var(--sage-light);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+  }
+  .hero-scroll:hover { opacity: 1; }
+  .hero-scroll svg {
+    animation: bounceDown 1.8s ease-in-out infinite;
+  }
+  @keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
   .chip {
     display: inline-flex;
     align-items: center;
@@ -335,13 +360,93 @@
 
   /* ── SCREENSHOTS ── */
   .screenshot-real {
+    display: block;
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid var(--line);
     box-shadow: 0 4px 20px rgba(26,32,8,0.10);
     margin: 16px 0 8px;
+    position: relative;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
+  a.screenshot-real { cursor: zoom-in; }
+  a.screenshot-real:hover {
+    box-shadow: 0 8px 28px rgba(26,32,8,0.16);
+    transform: translateY(-2px);
+  }
+  a.screenshot-real::after {
+    content: '⤢ View gallery';
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(13,27,42,0.75);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  a.screenshot-real:hover::after { opacity: 1; }
   .screenshot-real img { display: block; width: 100%; }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,27,42,0.92);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 8px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+  }
+  .lightbox-close,
+  .lightbox-prev,
+  .lightbox-next {
+    position: absolute;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 18px;
+  }
+  .lightbox-close:hover,
+  .lightbox-prev:hover,
+  .lightbox-next:hover { background: rgba(255,255,255,0.18); }
+  .lightbox-close { top: 24px; right: 24px; }
+  .lightbox-prev { left: 24px; top: 50%; transform: translateY(-50%); }
+  .lightbox-next { right: 24px; top: 50%; transform: translateY(-50%); }
+  .lightbox-caption {
+    position: absolute;
+    bottom: 28px;
+    left: 0; right: 0;
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  @media (max-width: 640px) {
+    .lightbox-prev, .lightbox-next { width: 36px; height: 36px; font-size: 14px; }
+    .lightbox { padding: 16px; }
+  }
   .screenshot-caption {
     font-size: 12px;
     color: var(--muted);
@@ -475,7 +580,7 @@
     color: #fff;
     line-height: 1.1;
   }
-  .live-title em { font-style: italic; color: var(--sage-light); }
+  .live-title em { font-style: normal; color: #fff; }
   .live-desc {
     font-size: 13px;
     color: rgba(255,255,255,0.45);
@@ -732,6 +837,10 @@
       <span class="chip"><span class="dot"></span>RTE France API</span>
       <span class="chip"><span class="dot"></span>3M+ rows</span>
     </div>
+    <a href="#live-dashboard" class="hero-scroll">
+      <span>Live Dashboard</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </a>
   </div>
 </div>
 
@@ -883,9 +992,9 @@
       <div class="step-num">2.2</div>
       <div class="step-body">
         <h3>Tables in Snowflake</h3>
-        <div class="screenshot-real">
+        <a href="javascript:void(0)" onclick="openLightbox(0)" class="screenshot-real">
           <img src="snowflake-screenshot.png" alt="Snowflake FCT_ENERGY_HOURLY table with generation columns">
-        </div>
+        </a>
         <p class="screenshot-caption">FCT_ENERGY_HOURLY after dbt transformation nuclear, gas, wind, solar, hydro columns alongside total generation and consumption</p>
       </div>
     </div>
@@ -928,9 +1037,9 @@
       <div class="step-num">3.2</div>
       <div class="step-body">
         <h3>Lineage graph</h3>
-        <div class="screenshot-real">
+        <a href="javascript:void(0)" onclick="openLightbox(1)" class="screenshot-real">
           <img src="dbt-screenshot.png" alt="dbt Cloud fct_energy_hourly model and lineage DAG">
-        </div>
+        </a>
         <p class="screenshot-caption">dbt Cloud lineage graph showing how raw source tables flow through staging models into the final mart layer that Power BI reads from</p>
       </div>
     </div>
@@ -996,10 +1105,28 @@
             <div class="kpi-delta up">↗ +3.5pp renewables YoY</div>
           </div>
         </div>
-        <div class="screenshot-real" style="margin-top:20px;">
-          <img src="powerbi-screenshot.png" alt="Power BI Tab 1 Overview">
-        </div>
+        <a href="javascript:void(0)" onclick="openLightbox(2)" class="screenshot-real" style="margin-top:20px;">
+          <img src="powerbi-overview.png" alt="Power BI Overview tab">
+        </a>
         <p class="screenshot-caption">Overview tab KPI cards with sparklines, merit-order bar chart, seasonal scatter of price vs renewables share</p>
+
+        <div class="two-col" style="margin-top:8px;">
+          <a href="javascript:void(0)" onclick="openLightbox(3)" class="screenshot-real">
+            <img src="powerbi-generation-mix.png" alt="Power BI Generation Mix tab">
+          </a>
+          <a href="javascript:void(0)" onclick="openLightbox(4)" class="screenshot-real">
+            <img src="powerbi-supply-demand.png" alt="Power BI Supply Demand and Price tab">
+          </a>
+        </div>
+        <div class="two-col" style="margin-top:8px;">
+          <a href="javascript:void(0)" onclick="openLightbox(5)" class="screenshot-real">
+            <img src="powerbi-cross-border.png" alt="Power BI Cross-Border Flows tab">
+          </a>
+          <a href="javascript:void(0)" onclick="openLightbox(6)" class="screenshot-real">
+            <img src="powerbi-data-lineage.png" alt="Power BI Data Lineage tab">
+          </a>
+        </div>
+        <p class="screenshot-caption">Generation Mix, Supply Demand &amp; Price, Cross-Border Flows, and Data Lineage tabs. Click any image to enlarge and step through all screenshots.</p>
       </div>
     </div>
   </div>
@@ -1086,7 +1213,7 @@
 </div>
 
 <!-- LIVE DASHBOARD -->
-<div class="live-section">
+<div class="live-section" id="live-dashboard">
   <div class="live-inner">
     <div class="live-header">
       <div>
@@ -1125,6 +1252,55 @@
     </div>
   </div>
 </footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this) closeLightbox()">
+  <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
+  <div class="lightbox-prev" onclick="navLightbox(-1)">&#8592;</div>
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-next" onclick="navLightbox(1)">&#8594;</div>
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<script>
+  const galleryImages = [
+    { src: 'snowflake-screenshot.png', caption: 'Snowflake — FCT_ENERGY_HOURLY after dbt transformation' },
+    { src: 'dbt-screenshot.png', caption: 'dbt Cloud — lineage graph and model SQL' },
+    { src: 'powerbi-overview.png', caption: 'Power BI — Overview tab' },
+    { src: 'powerbi-generation-mix.png', caption: 'Power BI — Generation Mix tab' },
+    { src: 'powerbi-supply-demand.png', caption: 'Power BI — Supply Demand &amp; Price tab' },
+    { src: 'powerbi-cross-border.png', caption: 'Power BI — Cross-Border Flows tab' },
+    { src: 'powerbi-data-lineage.png', caption: 'Power BI — Data Lineage tab' }
+  ];
+  let lightboxIndex = 0;
+
+  function openLightbox(i) {
+    lightboxIndex = i;
+    updateLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function navLightbox(dir) {
+    lightboxIndex = (lightboxIndex + dir + galleryImages.length) % galleryImages.length;
+    updateLightbox();
+  }
+  function updateLightbox() {
+    const item = galleryImages[lightboxIndex];
+    document.getElementById('lightbox-img').src = item.src;
+    document.getElementById('lightbox-img').alt = item.caption;
+    document.getElementById('lightbox-caption').innerHTML = item.caption;
+  }
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') navLightbox(-1);
+    if (e.key === 'ArrowRight') navLightbox(1);
+  });
+</script>
 
 </body>
 </html>
