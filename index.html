@@ -101,6 +101,18 @@
     position: relative;
     z-index: 1;
   }
+  .hero-byline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+  }
+  .byline-sep {
+    color: rgba(255,255,255,0.2);
+    margin: 0 4px;
+  }
   .hero-eyebrow {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
@@ -143,28 +155,43 @@
     gap: 8px;
   }
 
-  .hero-scroll {
+  .hero-cta {
     display: inline-flex;
-    flex-direction: column;
     align-items: center;
-    gap: 6px;
-    margin-top: 40px;
-    color: var(--sage-light);
+    gap: 10px;
+    margin-top: 36px;
+    color: var(--ink);
+    background: var(--sage);
     text-decoration: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    opacity: 0.75;
-    transition: opacity 0.2s ease;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 12px 24px;
+    border-radius: 8px;
+    transition: background 0.2s ease, transform 0.15s ease;
   }
-  .hero-scroll:hover { opacity: 1; }
-  .hero-scroll svg {
+  .hero-cta:hover {
+    background: var(--sage-light);
+    transform: translateY(-1px);
+  }
+  .hero-cta svg {
     animation: bounceDown 1.8s ease-in-out infinite;
+  }
+  .hero-cta-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
   }
   @keyframes bounceDown {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(5px); }
+    50% { transform: translateY(3px); }
   }
 
   .chip {
@@ -235,6 +262,26 @@
   .pi-sf  { background: #e8f8f2; }
   .pi-dbt { background: #fff0eb; }
   .pi-pbi { background: #ece8fc; }
+  .pi-agent { background: #f0f4e8; }
+
+  .pipe-step.experimental .pipe-box {
+    border-style: dashed;
+    border-color: var(--sage);
+    background: var(--sage-bg);
+  }
+  .pipe-experimental-tag {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sage-dark);
+    background: var(--sage-pale);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
   .pipe-name { font-weight: 600; font-size: 13px; color: var(--ink); }
   .pipe-desc { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
   .pipe-arrow { padding: 0 8px; color: var(--muted); font-size: 16px; flex-shrink: 0; }
@@ -819,11 +866,14 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
+    <div class="hero-byline">Neil Milbourn <span class="byline-sep">/</span> BI Lead, Paris</div>
     <div class="hero-eyebrow">Portfolio Project Data Engineering</div>
     <h1>Mapping France's<br>Electricity Mix</h1>
     <p class="hero-sub">
-      An end-to-end pipeline pulling live data from four RTE France APIs into Snowflake,
-      transforming with dbt Cloud, and visualising in Power BI across 3 million rows from January 2022 to present.
+      France generates almost all its electricity from nuclear and renewables, sells
+      the surplus to half of Europe, and saw wholesale prices crash from €281/MWh to €60/MWh
+      in two years. I built a pipeline to track it all: four RTE France APIs feeding
+      3 million rows through Snowflake, dbt, and into a live Power BI dashboard.
     </p>
     <div class="hero-meta">
       <span class="chip"><span class="dot"></span>Python ETL</span>
@@ -833,8 +883,9 @@
       <span class="chip"><span class="dot"></span>RTE France API</span>
       <span class="chip"><span class="dot"></span>3M+ rows</span>
     </div>
-    <a href="#live-dashboard" class="hero-scroll">
-      <span>Live Dashboard</span>
+    <a href="#live-dashboard" class="hero-cta">
+      <span class="hero-cta-dot"></span>
+      Explore the live dashboard
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
     </a>
   </div>
@@ -882,6 +933,15 @@
           <div class="pipe-icon pi-pbi">📊</div>
           <div class="pipe-name">Power BI</div>
           <div class="pipe-desc">5-tab dashboard, 40+ DAX measures</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+      </div>
+      <div class="pipe-step experimental">
+        <div class="pipe-box">
+          <div class="pipe-icon pi-agent">🤖</div>
+          <div class="pipe-name">Claude Code Agents</div>
+          <div class="pipe-desc">3-agent QA pipeline for ETL validation</div>
+          <div class="pipe-experimental-tag">Side experiment</div>
         </div>
       </div>
     </div>
@@ -988,14 +1048,17 @@
       <div class="step-num">2.2</div>
       <div class="step-body">
         <h3>Tables in Snowflake</h3>
-        <div class="carousel" id="carousel-snowflake" data-len="2">
-          <div class="carousel-label">1 / 2</div>
+        <div class="carousel" id="carousel-snowflake" data-len="3">
+          <div class="carousel-label">1 / 3</div>
           <div class="carousel-track">
             <div class="carousel-slide">
-              <img src="snowflake-screenshot1.png" alt="Snowflake table view 1">
+              <img src="snowflake-screenshot.png" alt="Snowflake table view 1">
             </div>
             <div class="carousel-slide">
-              <img src="snowflake-screenshot2.png" alt="Snowflake table view 2">
+              <img src="snowflake-screenshot1.png" alt="Snowflake table view 2">
+            </div>
+            <div class="carousel-slide">
+              <img src="snowflake-screenshot2.png" alt="Snowflake table view 3">
             </div>
           </div>
           <div class="carousel-btn carousel-prev" onclick="carouselNav('carousel-snowflake',-1)">&#8592;</div>
@@ -1003,6 +1066,7 @@
           <div class="carousel-dots">
             <div class="carousel-dot active" onclick="carouselGo('carousel-snowflake',0)"></div>
             <div class="carousel-dot" onclick="carouselGo('carousel-snowflake',1)"></div>
+            <div class="carousel-dot" onclick="carouselGo('carousel-snowflake',2)"></div>
           </div>
         </div>
         <p class="screenshot-caption">FCT_ENERGY_HOURLY after dbt transformation nuclear, gas, wind, solar, hydro columns alongside total generation and consumption</p>
@@ -1047,14 +1111,17 @@
       <div class="step-num">3.2</div>
       <div class="step-body">
         <h3>Lineage graph</h3>
-        <div class="carousel" id="carousel-dbt" data-len="2">
-          <div class="carousel-label">1 / 2</div>
+        <div class="carousel" id="carousel-dbt" data-len="3">
+          <div class="carousel-label">1 / 3</div>
           <div class="carousel-track">
             <div class="carousel-slide">
-              <img src="dbt-screenshot1.png" alt="dbt Cloud view 1">
+              <img src="dbt-screenshot.png" alt="dbt Cloud view 1">
             </div>
             <div class="carousel-slide">
-              <img src="dbt-screenshot2.png" alt="dbt Cloud view 2">
+              <img src="dbt-screenshot1.png" alt="dbt Cloud view 2">
+            </div>
+            <div class="carousel-slide">
+              <img src="dbt-screenshot2.png" alt="dbt Cloud view 3">
             </div>
           </div>
           <div class="carousel-btn carousel-prev" onclick="carouselNav('carousel-dbt',-1)">&#8592;</div>
@@ -1062,6 +1129,7 @@
           <div class="carousel-dots">
             <div class="carousel-dot active" onclick="carouselGo('carousel-dbt',0)"></div>
             <div class="carousel-dot" onclick="carouselGo('carousel-dbt',1)"></div>
+            <div class="carousel-dot" onclick="carouselGo('carousel-dbt',2)"></div>
           </div>
         </div>
         <p class="screenshot-caption">dbt Cloud lineage graph showing how raw source tables flow through staging models into the final mart layer that Power BI reads from</p>
@@ -1085,17 +1153,56 @@
       <div class="step-num">4.1</div>
       <div class="step-body">
         <h3>What the data shows</h3>
+
+        <p style="font-size:14px;color:#4a5a25;line-height:1.7;margin-bottom:20px;">
+          The story in this dataset is one of crisis and recovery. In 2022, France took dozens of nuclear reactors
+          offline for emergency maintenance. Generation dropped to 49 GW, wholesale prices spiked to an average of
+          €281/MWh, and the country's role as Europe's electricity powerhouse was temporarily in question. By 2025,
+          nuclear output had recovered to 60 GW, prices had normalized to €63/MWh, and exports to Germany alone had
+          grown from 2 TWh to 62 TWh per year. Here's how that plays out across the key metrics.
+        </p>
+
+        <!-- CRISIS TO RECOVERY TIMELINE -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+          <div style="background:var(--sage-bg);border:1px solid var(--line);border-radius:10px;padding:16px;border-top:3px solid var(--coral);">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:6px;">2022 CRISIS</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);">€281</div>
+            <div style="font-size:11px;color:var(--muted);">Avg price/MWh</div>
+            <div style="font-size:11px;color:var(--coral);margin-top:6px;">r = -0.23 (signal lost)</div>
+          </div>
+          <div style="background:var(--sage-bg);border:1px solid var(--line);border-radius:10px;padding:16px;border-top:3px solid var(--amber);">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:6px;">2023 RECOVERY</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);">€99</div>
+            <div style="font-size:11px;color:var(--muted);">Avg price/MWh</div>
+            <div style="font-size:11px;color:var(--green);margin-top:6px;">r = -0.66 (signal returns)</div>
+          </div>
+          <div style="background:var(--sage-bg);border:1px solid var(--line);border-radius:10px;padding:16px;border-top:3px solid var(--blue);">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:6px;">2024-25 NORMAL</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);">€60-63</div>
+            <div style="font-size:11px;color:var(--muted);">Avg price/MWh</div>
+            <div style="font-size:11px;color:var(--green);margin-top:6px;">r = -0.46 to -0.70</div>
+          </div>
+          <div style="background:var(--sage-bg);border:1px solid var(--line);border-radius:10px;padding:16px;border-top:3px solid var(--green);">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:6px;">NUCLEAR RECOVERY</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);">71%</div>
+            <div style="font-size:11px;color:var(--muted);">Peak nuclear share (2025)</div>
+            <div style="font-size:11px;color:var(--green);margin-top:6px;">Up from 65% in 2022</div>
+          </div>
+        </div>
+
         <div class="finding">
-          <div class="finding-q">When renewables surge, does the wholesale price actually fall?</div>
-          <div class="finding-a">Yes. Pearson <span class="r-val">r = -0.29</span> over the last 12 months between daily renewables share and day-ahead price. Each rise in renewable penetration displaces gas at the margin and pulls the clearing price down the merit-order effect, visible in the data without any modelling assumptions.</div>
+          <div class="finding-q">Does renewable growth actually push prices down?</div>
+          <div class="finding-a">In normal market conditions, yes. The year-by-year correlation between daily renewables share and day-ahead price settles around <span class="r-val">r = -0.66</span> once the 2022 energy crisis passes. During the crisis itself, gas-price shocks dominated everything and the renewables relationship was barely detectable (r = -0.23). This distinction matters: the merit-order effect is real, but it only becomes the primary price driver when the broader energy market is stable.</div>
         </div>
+
         <div class="finding green">
-          <div class="finding-q">What is France's generation profile?</div>
-          <div class="finding-a">Average output of <strong>55.9 GW</strong>, with nuclear providing <strong>68%</strong> and low-carbon sources (nuclear, renewables, hydro) accounting for <strong>93.7%</strong> of the mix. France runs a structural surplus and is a consistent net exporter, primarily to Italy, Belgium, and Germany.</div>
+          <div class="finding-q">How did France's exports change after the nuclear recovery?</div>
+          <div class="finding-a">Exports exploded once reactors came back online. Germany went from receiving <strong>2.1 TWh</strong> of French electricity in 2022 to <strong>62.5 TWh</strong> in 2024, a 30x increase directly linked to Germany's own nuclear phase-out creating demand for baseload power from across the border. Italy has remained the single largest buyer throughout, at 50+ TWh per year since 2023.</div>
         </div>
+
         <div class="finding amber">
-          <div class="finding-q">When is demand highest?</div>
-          <div class="finding-a">Unlike the UK, France peaks around <strong>midnight</strong> rather than the evening. Heavy reliance on electric heating means overnight load stays high through winter, with the annual average consumption hour peaking at 00:00 a counterintuitive finding driven by the heating-dominated demand profile.</div>
+          <div class="finding-q">When does France use the most electricity?</div>
+          <div class="finding-a">The annual average peaks at <strong>midnight</strong>, not the evening. This is unusual compared to most European countries and is driven by France's heavy reliance on electric heating: overnight storage heaters charge during off-peak tariff hours, keeping demand high through the night. The evening peak visible in countries like the UK (around 17:00-19:00) is much less pronounced here.</div>
         </div>
       </div>
     </div>
@@ -1129,14 +1236,17 @@
             <div class="kpi-delta up">↗ +3.5pp renewables YoY</div>
           </div>
         </div>
-        <div class="carousel" id="carousel-powerbi" data-len="2" style="margin-top:20px;">
-          <div class="carousel-label">1 / 2</div>
+        <div class="carousel" id="carousel-powerbi" data-len="3" style="margin-top:20px;">
+          <div class="carousel-label">1 / 3</div>
           <div class="carousel-track">
             <div class="carousel-slide">
-              <img src="powerbi-screenshot1.png" alt="Power BI dashboard view 1">
+              <img src="powerbi-screenshot.png" alt="Power BI dashboard view 1">
             </div>
             <div class="carousel-slide">
               <img src="powerbi-screenshot2.png" alt="Power BI dashboard view 2">
+            </div>
+            <div class="carousel-slide">
+              <img src="powerbi-screenshot3.png" alt="Power BI dashboard view 3">
             </div>
           </div>
           <div class="carousel-btn carousel-prev" onclick="carouselNav('carousel-powerbi',-1)">&#8592;</div>
@@ -1144,6 +1254,7 @@
           <div class="carousel-dots">
             <div class="carousel-dot active" onclick="carouselGo('carousel-powerbi',0)"></div>
             <div class="carousel-dot" onclick="carouselGo('carousel-powerbi',1)"></div>
+            <div class="carousel-dot" onclick="carouselGo('carousel-powerbi',2)"></div>
           </div>
         </div>
         <p class="screenshot-caption">Overview tab KPI cards with sparklines, merit-order bar chart, seasonal scatter of price vs renewables share</p>
@@ -1232,6 +1343,55 @@
   </div>
 </div>
 
+<hr class="divider" style="max-width:1080px;margin:0 auto;">
+
+<!-- SECTION 6: AGENT ORCHESTRATION -->
+<div class="content" style="padding-top:48px;">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div class="section-title">
+      Agent Orchestration with Claude Code
+      <span>A side experiment in multi-agent workflows, separate from the main pipeline</span>
+    </div>
+  </div>
+
+  <p style="font-size:14px;color:#4a5a25;line-height:1.7;margin-bottom:16px;">
+    Alongside the main RTE pipeline, I set up a small multi-agent workflow in Claude Code as a training exercise
+    in agent orchestration. Three subagents live in <code>.claude/agents/</code> in a separate project folder and
+    run in sequence, each handing off to the next via shared files on disk. This was deliberately kept independent
+    of the Snowflake/dbt project, just a sandbox for learning how agent handoffs and tool permissions work in practice.
+  </p>
+
+  <div class="built-list">
+    <div class="built-item">
+      <div class="built-icon">📥</div>
+      <div class="built-text"><strong>etl-runner</strong> fetches a week of hourly data from the RTE France API and writes it to <code>data/raw.csv</code></div>
+    </div>
+    <div class="built-item">
+      <div class="built-icon">🔍</div>
+      <div class="built-text"><strong>data-validator</strong> reads the CSV and checks for nulls, invalid ranges, and missing rows, flagging issues as pass/fail/advisory</div>
+    </div>
+    <div class="built-item">
+      <div class="built-icon">📝</div>
+      <div class="built-text"><strong>docs-writer</strong> takes the validation output and writes a daily markdown report summarising the run and any action items</div>
+    </div>
+  </div>
+
+  <div class="detail-pills" style="margin-top:16px;">
+    <span class="dpill">Sequential handoff via shared files</span>
+    <span class="dpill">Independent toy pipeline</span>
+    <span class="dpill">Automated daily QA report</span>
+  </div>
+
+  <p style="font-size:13px;color:var(--muted);margin-top:16px;">
+    On a recent run the validator caught a systematic bug (a blank <code>updated_date</code> column across every row)
+    and flagged a data quality issue in the raw coal generation figures, both written up automatically in the
+    same report without manual review.
+  </p>
+</div>
+
+<hr class="divider" style="max-width:1080px;margin:0 auto;">
+
 <!-- LIVE DASHBOARD -->
 <div class="live-section" id="live-dashboard">
   <div class="live-inner">
@@ -1263,8 +1423,9 @@
 <footer>
   <div class="footer-inner">
     <div>
-      Built by Neil Milbourn BI Lead, Paris.
+      Neil Milbourn / BI Lead, Paris
       <br>Power BI · Snowflake · dbt · Python
+      <br style="margin-top:8px;"><span style="opacity:0.5;">© 2026 Neil Milbourn. All rights reserved.</span>
     </div>
     <div class="footer-links">
       <a href="https://www.linkedin.com/in/neilmilbourn/" target="_blank">LinkedIn</a>
