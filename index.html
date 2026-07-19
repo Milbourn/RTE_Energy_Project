@@ -44,6 +44,44 @@
   }
   .topnav a { font-weight: 500; }
 
+  .pagenav {
+    margin: 20px 0 28px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 18px;
+    font-size: 14px;
+  }
+  .pagenav a { font-weight: 500; }
+
+  /* ── GLOSSARY ── */
+  .glossary {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--tint);
+    padding: 20px 22px;
+    margin: 8px 0 28px;
+  }
+  .glossary-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .gl-row {
+    font-size: 14.5px;
+    color: var(--body);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .gl-row:last-child { margin-bottom: 0; }
+  .gl-term { font-weight: 700; color: var(--ink); }
+  .gl-term::after { content: ": "; }
+
   /* ── HEADER ── */
   header { padding: 40px 0 8px; }
   h1 {
@@ -240,9 +278,23 @@
     </div>
   </header>
 
+  <nav class="pagenav">
+    <a href="#overview">Overview</a>
+    <a href="#findings">Findings</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#build">How it's built</a>
+    <a href="#agents">Agent experiment</a>
+    <a href="#tools">Tools</a>
+  </nav>
+
   <!-- OVERVIEW -->
-  <section>
+  <section id="overview">
     <h2>Overview</h2>
+    <p>
+      <strong>In short:</strong> I built a pipeline that pulls France's live electricity data
+      straight from the grid operator, cleans it up, and turns it into a dashboard, then used it
+      to answer a real question about whether renewable power actually lowers prices.
+    </p>
     <p>
       France runs the most nuclear-heavy grid in the world, exports its surplus to half of Europe,
       and watched wholesale prices collapse from €281 to €60 per MWh in two years. This project
@@ -261,12 +313,27 @@
       <div class="stat"><div class="stat-val">93.7%</div><div class="stat-label">Low-carbon mix</div></div>
       <div class="stat"><div class="stat-val">6%</div><div class="stat-label">Import dependency</div></div>
     </div>
+
+    <div class="glossary">
+      <div class="glossary-title">Quick glossary</div>
+      <div class="gl-row"><span class="gl-term">RTE</span> The French grid operator (Réseau de Transport d'Électricité) that publishes this data.</div>
+      <div class="gl-row"><span class="gl-term">Snowflake</span> A cloud data warehouse, basically a big, fast database that lives online.</div>
+      <div class="gl-row"><span class="gl-term">dbt</span> A tool that turns raw data into clean, ready-to-use tables using plain SQL.</div>
+      <div class="gl-row"><span class="gl-term">ELT</span> Extract, load, transform: load the raw data first, clean it up after, instead of before.</div>
+      <div class="gl-row"><span class="gl-term">Staging table</span> A first-pass copy of the raw data, barely touched.</div>
+      <div class="gl-row"><span class="gl-term">Mart table</span> A cleaned-up table built from staging, the one the dashboard actually reads.</div>
+      <div class="gl-row"><span class="gl-term">Merit-order effect</span> The idea that cheap renewable power pushes the market price down when there's more of it available.</div>
+      <div class="gl-row"><span class="gl-term">Correlation (r)</span> A number from -1 to 1 showing how closely two things move together. Close to -1 means as one goes up, the other reliably goes down.</div>
+      <div class="gl-row"><span class="gl-term">Day-ahead price</span> The wholesale electricity price set the day before, for each hour of the next day.</div>
+      <div class="gl-row"><span class="gl-term">Idempotent</span> Safe to run twice. Running the same load again doesn't create duplicates.</div>
+      <div class="gl-row"><span class="gl-term">DAX</span> The formula language Power BI uses to calculate things like totals and averages.</div>
+    </div>
   </section>
 
   <hr>
 
   <!-- ANALYSIS -->
-  <section>
+  <section id="findings">
     <h2>What the data shows</h2>
     <p>
       In 2022, France pulled dozens of nuclear reactors offline for emergency corrosion inspections.
@@ -328,13 +395,13 @@
   <hr>
 
   <!-- HOW ITS BUILT -->
-  <section>
+  <section id="build">
     <h2>How it's built</h2>
     <p>
       <strong>RTE France API → Python → Snowflake → dbt Cloud → Power BI.</strong>
-      A Python job backfills history in 30-day windows and runs daily for new data,
-      loading four raw tables in Snowflake. dbt transforms them into three mart tables
-      that Power BI reads over a live connection.
+      A Python job pulls older history in 30-day chunks, then runs daily to fetch just
+      whatever's new, loading four raw tables into Snowflake. dbt turns those into three mart
+      tables that Power BI reads over a live connection.
     </p>
 
     <h3>Extraction</h3>
@@ -352,8 +419,8 @@
     <h3>Storage</h3>
     <p>
       Data lands in four staging tables in Snowflake (<code>RTE_ENERGY.GENERATION</code>, Azure UK South).
-      The load is idempotent, built on a merge pattern, so a double-fired scheduler updates rows instead
-      of duplicating them.
+      The load is idempotent, meaning safe to run twice: if the daily job accidentally fires
+      more than once, it updates the existing rows instead of duplicating them.
     </p>
     <div class="shot" id="shot-sf" data-len="3">
       <div class="shot-count">1 / 3</div>
@@ -406,12 +473,12 @@
   <hr>
 
   <!-- AGENT EXPERIMENT -->
-  <section>
+  <section id="agents">
     <h2>Side experiment: agent orchestration</h2>
     <p>
       Alongside the main pipeline I set up a small multi-agent workflow in Claude Code, a separate
-      sandbox to learn how agent handoffs and tool permissions behave in practice. Three subagents
-      run in sequence, handing off via shared files:
+      sandbox to learn how handing off work between AI agents actually behaves in practice. Three
+      agents run one after another, passing their output to the next via shared files:
     </p>
     <ul class="plain">
       <li><code>etl-runner</code> fetches a week of hourly RTE data to CSV</li>
@@ -427,7 +494,7 @@
   <hr>
 
   <!-- TOOLS -->
-  <section>
+  <section id="tools">
     <h2>Tools used</h2>
     <ul class="plain">
       <li><strong>Python 3.11</strong>: extraction, normalisation, Snowflake loading, daily scheduling</li>
